@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心迹图标生成器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">心迹 APP 图标生成器</h1>
+        <p class="text-gray-600 mb-8">点击下方按钮下载所需尺寸的图标。建议使用在线工具（如 <a href="https://realfavicongenerator.net/" class="text-blue-600 hover:underline" target="_blank">RealFaviconGenerator</a>）将SVG转换为PNG。</p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="text-center">
+                <div class="w-24 h-24 mx-auto mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span class="text-white text-4xl">❤️</span>
+                </div>
+                <p class="text-sm text-gray-600">72x72</p>
+                <p class="text-xs text-gray-500">小屏幕设备</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="w-28 h-28 mx-auto mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span class="text-white text-5xl">❤️</span>
+                </div>
+                <p class="text-sm text-gray-600">96x96</p>
+                <p class="text-xs text-gray-500">中等屏幕</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="w-32 h-32 mx-auto mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span class="text-white text-6xl">❤️</span>
+                </div>
+                <p class="text-sm text-gray-600">128x128</p>
+                <p class="text-xs text-gray-500">高清屏幕</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="w-36 h-36 mx-auto mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span class="text-white text-7xl">❤️</span>
+                </div>
+                <p class="text-sm text-gray-600">144x144</p>
+                <p class="text-xs text-gray-500">Android设备</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="w-40 h-40 mx-auto mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span class="text-white text-8xl">❤️</span>
+                </div>
+                <p class="text-sm text-gray-600">152x152</p>
+                <p class="text-xs text-gray-500">iPad</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="w-48 h-48 mx-auto mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span class="text-white text-9xl">❤️</span>
+                </div>
+                <p class="text-sm text-gray-600">192x192</p>
+                <p class="text-xs text-gray-500">PWA图标</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="w-56 h-56 mx-auto mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span class="text-white text-10xl">❤️</span>
+                </div>
+                <p class="text-sm text-gray-600">384x384</p>
+                <p class="text-xs text-gray-500">超大屏幕</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="w-64 h-64 mx-auto mb-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span class="text-white text-11xl">❤️</span>
+                </div>
+                <p class="text-sm text-gray-600">512x512</p>
+                <p class="text-xs text-gray-500">应用商店</p>
+            </div>
+        </div>
+        
+        <div class="mt-10 p-6 bg-blue-50 rounded-lg">
+            <h2 class="text-xl font-semibold text-blue-800 mb-4">快速生成图标</h2>
+            <p class="text-blue-700 mb-4">由于浏览器无法直接创建PNG图片，请按以下步骤操作：</p>
+            <ol class="list-decimal list-inside space-y-2 text-blue-700">
+                <li>打开 <a href="https://realfavicongenerator.net/" class="underline font-semibold" target="_blank">RealFaviconGenerator</a></li>
+                <li>上传 <code class="bg-blue-100 px-2 py-1 rounded">icons/icon.svg</code> 文件</li>
+                <li>下载生成的图标包</li>
+                <li>将图标文件解压到 <code class="bg-blue-100 px-2 py-1 rounded">icons/</code> 目录</li>
+            </ol>
+        </div>
+        
+        <div class="mt-8 p-6 bg-green-50 rounded-lg">
+            <h2 class="text-xl font-semibold text-green-800 mb-4">或使用在线工具快速转换</h2>
+            <div class="space-y-3">
+                <a href="https://realfavicongenerator.net/" target="_blank" class="block p-4 bg-white rounded-lg hover:shadow-md transition-shadow">
+                    <span class="text-green-600 font-semibold">RealFaviconGenerator.net</span>
+                    <p class="text-sm text-gray-600">最完整的Favicon生成器，支持所有平台</p>
+                </a>
+                <a href="https://favicon.io/emoji-aa-generator/" target="_blank" class="block p-4 bg-white rounded-lg hover:shadow-md transition-shadow">
+                    <span class="text-green-600 font-semibold">Favicon.io Emoji Generator</span>
+                    <p class="text-sm text-gray-600">将emoji图标转换为favicon</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

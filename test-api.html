@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agnes AI API测试</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-gray-800">Agnes AI API 测试工具</h1>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">API配置</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-600 mb-2">API Key</label>
+                    <input type="text" id="apiKey" value="sk-CLhREPdd3Pn8f3CVk1dHNynbUR1WKXi4Jvy2RP5kjAZSz0cr" 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm">
+                </div>
+                <div>
+                    <label class="block text-gray-600 mb-2">API URL</label>
+                    <input type="text" id="apiUrl" value="https://apihub.agnes-ai.com/v1/images/generations" 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm">
+                </div>
+                <div>
+                    <label class="block text-gray-600 mb-2">模型</label>
+                    <input type="text" id="model" value="agnes-image-2.1-flash" 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg font-mono text-sm">
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">生成参数</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-600 mb-2">提示词 (Prompt)</label>
+                    <textarea id="prompt" rows="3" 
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg">a calm lake with sunshine and gentle breeze, beautiful landscape, impressionist style</textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-600 mb-2">尺寸</label>
+                        <select id="size" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                            <option value="1024x1024">1024x1024</option>
+                            <option value="512x512">512x512</option>
+                            <option value="768x768">768x768</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600 mb-2">数量</label>
+                        <input type="number" id="n" value="1" min="1" max="4"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button id="testBtn" onclick="testAPI()" 
+                class="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-bold text-lg hover:from-blue-600 hover:to-purple-600 transition-all mb-6">
+            测试 API 调用
+        </button>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">测试结果</h2>
+            <div id="status" class="mb-4 p-4 bg-gray-50 rounded-lg">
+                <p class="text-gray-500">等待测试...</p>
+            </div>
+            <div id="response" class="p-4 bg-gray-900 rounded-lg overflow-x-auto">
+                <pre class="text-green-400 text-sm"><code>// API响应将显示在这里</code></pre>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">生成的图片</h2>
+            <div id="images" class="grid grid-cols-2 gap-4">
+                <p class="text-gray-500 col-span-2 text-center py-8">暂无图片</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function testAPI() {
+            const apiKey = document.getElementById('apiKey').value;
+            const apiUrl = document.getElementById('apiUrl').value;
+            const model = document.getElementById('model').value;
+            const prompt = document.getElementById('prompt').value;
+            const size = document.getElementById('size').value;
+            const n = parseInt(document.getElementById('n').value);
+            
+            const statusEl = document.getElementById('status');
+            const responseEl = document.getElementById('response');
+            const imagesEl = document.getElementById('images');
+            
+            statusEl.innerHTML = '<p class="text-blue-500">正在调用API，请稍候...</p>';
+            responseEl.innerHTML = '<pre class="text-yellow-400 text-sm"><code>请求发送中...</code></pre>';
+            imagesEl.innerHTML = '<p class="text-gray-500 col-span-2 text-center py-8">生成中...</p>';
+            
+            try {
+                const startTime = Date.now();
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        prompt: prompt,
+                        size: size,
+                        n: n
+                    })
+                });
+                
+                const endTime = Date.now();
+                const duration = (endTime - startTime) / 1000;
+                
+                console.log('响应状态:', response.status);
+                console.log('响应头:', response.headers);
+                
+                const responseText = await response.text();
+                console.log('响应文本:', responseText);
+                
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (e) {
+                    data = { raw_text: responseText };
+                }
+                
+                if (response.ok) {
+                    statusEl.innerHTML = `
+                        <p class="text-green-500 font-bold">✅ API调用成功！</p>
+                        <p class="text-gray-600 text-sm mt-1">状态码: ${response.status} | 耗时: ${duration}秒</p>
+                    `;
+                    
+                    if (data.data && data.data.length > 0) {
+                        imagesEl.innerHTML = '';
+                        data.data.forEach((item, index) => {
+                            let imgUrl = item.url ? item.url.trim().replace(/^`/, '').replace(/`$/, '') : (item.b64_json ? `data:image/png;base64,${item.b64_json}` : null);
+                            
+                            if (imgUrl) {
+                                imagesEl.innerHTML += `
+                                    <div class="relative">
+                                        <img src="${imgUrl}" alt="生成的图片 ${index+1}" 
+                                             class="w-full h-48 object-cover rounded-lg shadow-md"
+                                             onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=图片加载失败';">
+                                        <p class="text-xs text-gray-500 mt-1">图片 ${index+1}</p>
+                                        <p class="text-xs text-gray-400 mt-0.5 break-all">${imgUrl}</p>
+                                    </div>
+                                `;
+                            }
+                        });
+                        
+                        if (imagesEl.children.length === 0) {
+                            imagesEl.innerHTML = '<p class="text-yellow-500 col-span-2 text-center py-8">API返回成功，但没有找到图片URL</p>';
+                        }
+                    } else {
+                        imagesEl.innerHTML = '<p class="text-yellow-500 col-span-2 text-center py-8">API返回成功，但数据格式不符合预期</p>';
+                    }
+                } else {
+                    statusEl.innerHTML = `
+                        <p class="text-red-500 font-bold">❌ API调用失败</p>
+                        <p class="text-gray-600 text-sm mt-1">状态码: ${response.status} | 耗时: ${duration}秒</p>
+                    `;
+                    imagesEl.innerHTML = '<p class="text-red-500 col-span-2 text-center py-8">生成失败</p>';
+                }
+                
+                responseEl.innerHTML = `<pre class="text-green-400 text-sm"><code>${JSON.stringify(data, null, 2)}</code></pre>`;
+                
+            } catch (error) {
+                console.error('错误:', error);
+                
+                statusEl.innerHTML = `
+                    <p class="text-red-500 font-bold">❌ 请求异常</p>
+                    <p class="text-gray-600 text-sm mt-1">错误信息: ${error.message}</p>
+                `;
+                
+                responseEl.innerHTML = `<pre class="text-red-400 text-sm"><code>${error.stack || error.message}</code></pre>`;
+                
+                imagesEl.innerHTML = '<p class="text-red-500 col-span-2 text-center py-8">请求失败</p>';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心迹图标生成器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">心迹 APP 图标生成器</h1>
+        <p class="text-gray-600 mb-8">点击下方按钮，浏览器将自动生成并下载所有尺寸的PNG图标！</p>
+        
+        <div id="preview" class="grid grid-cols-4 md:grid-cols-8 gap-4 mb-8"></div>
+        
+        <div class="text-center">
+            <button id="generateBtn" class="px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all">
+                <i class="fa fa-download mr-2"></i>生成并下载所有图标
+            </button>
+            <p class="text-sm text-gray-500 mt-4">图标将自动保存到 downloads 文件夹</p>
+        </div>
+        
+        <div class="mt-10 p-6 bg-blue-50 rounded-lg">
+            <h2 class="text-xl font-semibold text-blue-800 mb-4">图标尺寸说明</h2>
+            <div class="grid md:grid-cols-3 gap-4 text-blue-700">
+                <div>
+                    <p class="font-semibold">72x72</p>
+                    <p class="text-sm">小屏幕Android设备</p>
+                </div>
+                <div>
+                    <p class="font-semibold">96x96</p>
+                    <p class="text-sm">Google TV</p>
+                </div>
+                <div>
+                    <p class="font-semibold">128x128</p>
+                    <p class="text-sm">Nexus 7</p>
+                </div>
+                <div>
+                    <p class="font-semibold">144x144</p>
+                    <p class="text-sm">Android设备</p>
+                </div>
+                <div>
+                    <p class="font-semibold">152x152</p>
+                    <p class="text-sm">iPad</p>
+                </div>
+                <div>
+                    <p class="font-semibold">192x192</p>
+                    <p class="text-sm">PWA / Android</p>
+                </div>
+                <div>
+                    <p class="font-semibold">384x384</p>
+                    <p class="text-sm">超大屏幕</p>
+                </div>
+                <div>
+                    <p class="font-semibold">512x512</p>
+                    <p class="text-sm">应用商店</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        
+        // 预览图标
+        const preview = document.getElementById('preview');
+        sizes.forEach(size => {
+            const div = document.createElement('div');
+            div.className = 'text-center';
+            div.innerHTML = `
+                <div class="w-full aspect-square bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-2 shadow-lg" style="max-width: ${Math.min(size, 64)}px;">
+                    <span class="text-white" style="font-size: ${Math.max(16, size/4)}px;">❤️</span>
+                </div>
+                <p class="text-xs text-gray-600">${size}x${size}</p>
+            `;
+            preview.appendChild(div);
+        });
+        
+        // 生成图标
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 创建渐变
+            function createGradient(ctx, size) {
+                const gradient = ctx.createLinearGradient(0, 0, size, size);
+                gradient.addColorStop(0, '#4F46E5');
+                gradient.addColorStop(1, '#7C3AED');
+                return gradient;
+            }
+            
+            // 绘制心形
+            function drawHeart(ctx, x, y, size) {
+                ctx.save();
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                const scale = size / 512;
+                ctx.moveTo(x + 256 * scale, y + 400 * scale);
+                ctx.bezierCurveTo(
+                    x + 180 * scale, y + 320 * scale,
+                    x + 120 * scale, y + 260 * scale,
+                    x + 120 * scale, y + 200 * scale
+                );
+                ctx.bezierCurveTo(
+                    x + 120 * scale, y + 150 * scale,
+                    x + 160 * scale, y + 110 * scale,
+                    x + 200 * scale, y + 110 * scale
+                );
+                ctx.bezierCurveTo(
+                    x + 230 * scale, y + 110 * scale,
+                    x + 256 * scale, y + 130 * scale,
+                    x + 256 * scale, y + 130 * scale
+                );
+                ctx.bezierCurveTo(
+                    x + 256 * scale, y + 130 * scale,
+                    x + 282 * scale, y + 110 * scale,
+                    x + 312 * scale, y + 110 * scale
+                );
+                ctx.bezierCurveTo(
+                    x + 352 * scale, y + 110 * scale,
+                    x + 392 * scale, y + 150 * scale,
+                    x + 392 * scale, y + 200 * scale
+                );
+                ctx.bezierCurveTo(
+                    x + 392 * scale, y + 260 * scale,
+                    x + 332 * scale, y + 320 * scale,
+                    x + 256 * scale, y + 400 * scale
+                );
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+            
+            // 绘制圆角矩形
+            function drawRoundedRect(ctx, x, y, width, height, radius) {
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + width - radius, y);
+                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                ctx.lineTo(x + width, y + height - radius);
+                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                ctx.lineTo(x + radius, y + height);
+                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+            }
+            
+            // 下载单个图标
+            async function downloadIcon(size) {
+                canvas.width = size;
+                canvas.height = size;
+                ctx.fillStyle = createGradient(ctx, size);
+                
+                const radius = size * 0.2;
+                drawRoundedRect(ctx, 0, 0, size, size, radius);
+                ctx.fill();
+                
+                // 添加阴影
+                ctx.shadowColor = 'rgba(0,0,0,0.2)';
+                ctx.shadowBlur = size * 0.05;
+                ctx.shadowOffsetY = size * 0.02;
+                
+                // 绘制心形
+                ctx.shadowColor = 'transparent';
+                drawHeart(ctx, 0, 0, size);
+                
+                // 转换为Blob并下载
+                return new Promise(resolve => {
+                    canvas.toBlob(blob => {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `icon-${size}x${size}.png`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        resolve();
+                    }, 'image/png');
+                });
+            }
+            
+            // 依次下载所有图标
+            for (const size of sizes) {
+                await downloadIcon(size);
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+            
+            alert('所有图标已生成并下载！请将图标文件移动到 icons 目录。');
+        });
+    </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</body>
+</html>
